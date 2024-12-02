@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+	th:replace="~{base::Layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Register Page.</title>
+</head>
+<body>
+	<section>
+		<div class="container mt-5 p-5">
+			<div class="row">
+				<div class="col-md-5 p-5">
+					<img src="img/ecom.png" width="100%" height="400px" />
+				</div>
+				<div class="col-md-7 p-2">
+					<div class="card shadow p-3 mb-5 bg-body-tertiary rounded">
+						<div class="card-header">
+							<p class="fs-4 text-center">REGISTE</p>
+						</div>
+						<div class="card-body">
+							<form>
+								<div class="row">
+									<div class="col">
+										<label class="form-label">Full Name</label> <input
+											class="form-control" type="text" name="name">
+									</div>
+
+									<div class="col">
+										<label class="form-label">Mobile Number</label> <input
+											class="form-control" type="number" name="mobileNumber">
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Email</label> <input
+										class="form-control" type="email" name="email">
+								</div>
+								<div class="row">
+									<div class="col">
+										<label class="form-label">Address</label> <input
+											class="form-control" type="text" name="address">
+									</div>
+
+									<div class="col">
+										<label class="form-label">City</label> <input
+											class="form-control" type="text" name="city">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col">
+										<label class="form-label">State</label> <input
+											class="form-control" type="text" name="state">
+									</div>
+
+									<div class="col">
+										<label class="form-label">PinCode</label> <input
+											class="form-control" type="text" name="pincode">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col">
+										<label class="form-label">Password</label> <input
+											class="form-control" type="text" name="password">
+									</div>
+
+									<div class="col">
+										<label class="form-label">Confirm Password</label> <input
+											class="form-control" type="password" name="cpassword">
+									</div>
+								</div>
+
+								<div class="mb-3">
+									<label class="form-label">Profile Image</label> <input
+										class="form-control" type="file" name="	profileImage">
+								</div>
+
+								<button type="submit"
+									class="btn bg-primary text-white col-md-12">Register</button>
+							</form>
+						</div>
+						<div class="card-footer text-center">
+							have an account? <a href="/login" class="text-decoration-none">
+								Login</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+</body>
+</html>
