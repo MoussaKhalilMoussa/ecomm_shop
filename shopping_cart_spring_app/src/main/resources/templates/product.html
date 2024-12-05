@@ -27,13 +27,15 @@
 					<div class="card shadow-sm p-0 mb-5 bg-body-tertiary rounded">
 						<div class="card-body">
 							<div class="list-group">
-								<a href="#"
-									class="list-group-item list-group-item-action active"
-									aria-current="true"> Categories </a> <a href="#"
-									class="list-group-item list-group-item-action"> Electronics
-								</a> <a href="#" class="list-group-item list-group-item-action">
-									Mobile Phone </a> <a href="#"
-									class="list-group-item list-group-item-action"> Clothes </a>
+								<p class="fs-5">Category</p>
+								<a href="/products"
+									th:classappend="${paramValue=='' ? 'active' : ''}"
+									class="list-group-item list-group-item-action"
+									aria-current="true"> All </a> <a th:each="c:${categories}"
+									th:href="@{'/products?category='+${c.name}}"
+									th:classappend="${paramValue == c.name} ? 'active':''"
+									class="list-group-item list-group-item-action">
+									[[${c.name}]] </a>
 							</div>
 						</div>
 					</div>
@@ -44,74 +46,35 @@
 						<div class="card-body">
 							<p class="fs-3 text-center">Products</p>
 							<div class="row">
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body">
-											<img alt="" src="img/product_img/laptop.jpg" width="100%"
-												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
-											<div class="row text-center">
-												<p class="fs-6 fw-bold">
-													&#8378; 500 <span class="fs-6 text-success"> 20% off</span>
-												</p>
-												<a href="/product" class="btn btn-primary col-md-6 offset-md-3">
-													View Details</a>
-											</div>
-										</div>
-									</div>
-								</div>
 
-								<!-- TODO : remove after backEnd implementation -->
+								<th:block th:if="${products.size > 0}">
+									<div class="col-md-3" th:each="p:${products}">
+										<div class="card">
+											<div class="card-body">
+												<img alt="" th:src="@{'/img/product_img/' + ${p.image}}"
+													width="100%" height="150px">
+												<p class="fs-5 text-center">[[${p.title}]]</p>
+												<div class="row text-center">
+													<p class="fs-6 fw-bold">
+														<span> [[${p.discountPrice}]]&#8378;</span><br> <span
+															class="text-decoration-line-through text-secondary">
+															[[${p.price}]]&#8378;</span> <span class="fs-6 text-success">
+															[[${p.discount}]]% off</span>
+													</p>
+													<a th:href="@{'/view_product_details/'+ ${p.id}}"
+														class="btn btn-primary col-md-6 offset-md-3"> View
+														Details</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</th:block>
 
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body">
-											<img alt="" src="img/product_img/laptop.jpg" width="100%"
-												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
-											<div class="row text-center">
-												<p class="fs-6 fw-bold">
-													&#8378; 500 <span class="fs-6 text-success"> 20% off</span>
-												</p>
-												<a href="#" class="btn btn-primary col-md-6 offset-md-3">
-													View Details</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body">
-											<img alt="" src="img/product_img/laptop.jpg" width="100%"
-												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
-											<div class="row text-center">
-												<p class="fs-6 fw-bold">
-													&#8378; 500 <span class="fs-6 text-success"> 20% off</span>
-												</p>
-												<a href="#" class="btn btn-primary col-md-6 offset-md-3">
-													View Details</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body">
-											<img alt="" src="img/product_img/laptop.jpg" width="100%"
-												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
-											<div class="row text-center">
-												<p class="fs-6 fw-bold">
-													&#8378; 500 <span class="fs-6 text-success"> 20% off</span>
-												</p>
-												<a href="#" class="btn btn-primary col-md-6 offset-md-3">
-													View Details</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- End -->
+								<th:block th:unless="${products.size > 0}">
+									<p class="fs-4 text-center mt-4 text-danger">Products not
+										Available.</p>
+								</th:block>
+								
 							</div>
 						</div>
 					</div>

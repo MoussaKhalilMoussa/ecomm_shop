@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.model.Category;
+import com.ecom.model.Product;
 import com.ecom.service.CategoryService;
+import com.ecom.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -32,13 +35,18 @@ public class AdminController {
 	@Autowired
 	private CategoryService categoryService;
 
+	@Autowired
+	private ProductService productService;
+
 	@GetMapping("/")
 	public String intdex() {
 		return "admin/index";
 	}
 
 	@GetMapping("/loadAddProduct")
-	public String loadAddProduct() {
+	public String loadAddProduct(Model model) {
+		List<Category> categories = categoryService.getAllCategory();
+		model.addAttribute("categories", categories);
 		return "admin/add_product";
 	}
 
@@ -121,7 +129,7 @@ public class AdminController {
 
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
 						+ file.getOriginalFilename());
-				System.out.println(path);
+				// System.out.println(path);
 
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
@@ -133,6 +141,80 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/loadEditCategory/" + category.getId();
+	}
+
+	@PostMapping("/saveProduct")
+	public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
+			HttpSession session) throws IOException {
+
+		String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
+		product.setImage(imageName);
+		product.setDiscount(0);
+		product.setDiscountPrice(product.getPrice());
+
+		Product saveProduct = productService.saveProduct(product);
+
+		File saveFile = new ClassPathResource("static/img").getFile();
+
+		Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
+				+ image.getOriginalFilename());
+
+		System.out.println(path);
+
+		Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+		if (!ObjectUtils.isEmpty(saveProduct)) {
+			session.setAttribute("succMsg", "Product saved successfully!");
+		} else {
+			session.setAttribute("errorMsg", "Something wrong on server!");
+		}
+		return "redirect:/admin/loadAddProduct";
+	}
+
+	@GetMapping("/products")
+	public String loadViewProducts(Model model) {
+		model.addAttribute("products", productService.getAllProducts());
+		return "/admin/products";
+	}
+
+	@GetMapping("/deleteProduct/{id}")
+	public String deleteProduct(@PathVariable("id") int id, HttpSession session) {
+		Boolean deleteProduct = productService.deleteProduct(id);
+		if (deleteProduct) {
+			session.setAttribute("succMsg", "Product deleted successfully!");
+		} else {
+			session.setAttribute("errorMsg", "Something wrong server!");
+		}
+		return "redirect:/admin/products";
+	}
+
+	@GetMapping("/editProduct/{id}")
+	public String editProduct(@PathVariable("id") int id, Model model) {
+		List<Category> categories = categoryService.getAllCategory();
+		Product product = productService.getProductById(id);
+		model.addAttribute("product", product);
+		model.addAttribute("categories", categories);
+		return "admin/edit_product";
+	}
+
+	@PostMapping("/updateProduct")
+	public String updateProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
+			HttpSession session, Model model) {
+
+		if (product.getDiscount() < 0 || product.getDiscount() > 100) {
+			session.setAttribute("errorMsg", "Invalid discount!");
+		} else {
+
+			Product updateProduct = productService.updateProduct(product, image);
+
+			if (!ObjectUtils.isEmpty(updateProduct)) {
+				session.setAttribute("succMsg", "Product updated successfully!");
+			} else {
+				session.setAttribute("errorMsg", "Something wrong on server!");
+			}
+
+		}
+		return "redirect:/admin/editProduct/" + product.getId();
 
 	}
 

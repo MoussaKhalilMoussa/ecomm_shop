@@ -13,7 +13,7 @@
 				<div class="col-md-6 offset-md-3">
 					<div class="card">
 						<div class="card-header text-center">
-							<p class="fs-4">Add Product</p>
+							<p class="fs-4">Edit Product</p>
 							<th:block th:if="${session.succMsg}">
 								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
 								<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
@@ -26,43 +26,61 @@
 						</div>
 						<div class="card-body">
 
-							<form action="/admin/saveProduct" method=post
+							<form action="/admin/updateProduct" method=post
 								enctype="multipart/form-data">
+
+								<input type="hidden" name="id" th:value="${product.id}" />
 								<div class="mb-3">
 									<label>Enter title </label> <input type="text" name="title"
-										class="form-control" />
+										th:value="${product.title}" class="form-control" />
 								</div>
 
 								<div class="mb-3">
 									<label>Enter Description </label>
 									<textarea rows="3" col="" class="form-control"
-										name="description"></textarea>
+										name="description">[[${product.description}]]</textarea>
 								</div>
 
-								<div class="mb-3">
-									<label>Category </label> <select class="form-control"
-										name="category">
-										<option>-- select --</option>
-										<option th:each="c:${categories}">[[${c.name}]]</option>
-									</select>
-								</div>
+								<div class="row">
+									<div class="mb-3 col">
+										<label>Category </label> <select class="form-control"
+											name="category">
+											<option>[[${product.category}]]</option>
+											<option th:each="c:${categories}">[[${c.name}]]</option>
+										</select>
+									</div>
 
-								<div class="mb-3">
-									<label>Enter Price </label> <input type="number" name="price"
-										class="form-control" />
+									<div class="mb-3 col">
+										<label>Enter Price </label> <input type="number" name="price"
+											th:value="${product.price}" class="form-control" />
+									</div>
 								</div>
+								
+								<div class="row">
+									<div class="mb-3 col">
+										<label>Discount </label>
+										<input type="number" name="discount"
+											th:value="${product.discount}" class="form-control" />
+									</div>
 
+									<div class="mb-3 col">
+										<label>Discount Price </label>
+										<input type="number" name="discountPrice" readonly
+											th:value="${product.discountPrice}" class="form-control" />
+									</div>
+								</div>
+								
 								<div class="mb-3">
 									<label> Status </label>
 									<div class="form-check">
 										<input class="form-check-input" type="radio" name="isActive"
-											id="flexRadioDefault1" checked value="true"> <label
+											id="flexRadioDefault1" th:checked="${product.isActive==true}" value="true"> <label
 											class="form-check-label" for="flexRadioDefault1">
 											Active </label>
 									</div>
 									<div class="form-check">
 										<input class="form-check-input" type="radio" name="isActive"
-											id="flexRadioDefault2" value="false"> <label
+											id="flexRadioDefault2" th:checked="${product.isActive==false}" value="false"> <label
 											class="form-check-label" for="flexRadioDefault2">
 											Inactive </label>
 									</div>
@@ -71,16 +89,21 @@
 								<div class="row">
 									<div class="mb-3 col">
 										<label>Enter stock </label> <input type="text" name="stock"
-											class="form-control" />
+											th:value="${product.stock}" class="form-control" />
 									</div>
 
 									<div class="mb-3 col">
 										<label>upload Image </label> <input type="file" name="file"
 											class="form-control" />
 									</div>
+
+									<div class="m-2">
+										<img th:src="@{'/img/product_img/'+${product.image}}"
+											width="100px" height="100px" />
+									</div>
 								</div>
 
-								<button class="btn btn-primary col-md-12">Submit</button>
+								<button class="btn btn-primary col-md-12">Update</button>
 
 							</form>
 						</div>
