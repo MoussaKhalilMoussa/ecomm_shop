@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,25 @@ public class HomeController {
 	@Autowired
 	userDtlsService userDtlsService;
 
+	@ModelAttribute
+	public void getUserDetails(Principal principal, Model model) {
+
+		if (principal != null) {
+			String email = principal.getName();
+			UserDtls userDtls = userDtlsService.getUserByEmail(email);
+			model.addAttribute("user", userDtls);
+		}
+
+		List<Category> categories = categoryService.getAllActiveCategory();
+		model.addAttribute("categories", categories);
+	}
+
 	@GetMapping("/")
 	public String index() {
 		return "index";
 	}
 
-	@GetMapping("/login")
+	@GetMapping("/signin")
 	public String login() {
 		return "login";
 	}
@@ -77,14 +91,14 @@ public class HomeController {
 	}
 
 	@PostMapping("/saveUser")
-	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file,
-			HttpSession session) throws IOException {
+	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
+			throws IOException {
 		String fileImage = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
 		user.setProfileImage(fileImage);
 		UserDtls saveUser = userDtlsService.saveUser(user);
 
-		if(!ObjectUtils.isEmpty(saveUser)) {
-			if(!file.isEmpty()) {
+		if (!ObjectUtils.isEmpty(saveUser)) {
+			if (!file.isEmpty()) {
 				File saveFile = new ClassPathResource("static/img").getFile();
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
 						+ file.getOriginalFilename());

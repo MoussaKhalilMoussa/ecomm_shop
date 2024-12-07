@@ -38,4 +38,6 @@ public class UserDtls {
 
 	private String profileImage;
 
+	private String role;
+
 }
