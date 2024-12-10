@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.ecom.model.Category;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CategoryService;
-import com.ecom.service.userDtlsService;
+import com.ecom.service.UserDtlsService;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
 	@Autowired
-	userDtlsService userDtlsService;
+	UserDtlsService userDtlsService;
 
 	@Autowired
 	CategoryService categoryService;

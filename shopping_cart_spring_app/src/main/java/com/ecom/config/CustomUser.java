@@ -34,4 +34,26 @@ public class CustomUser implements UserDetails {
 		return user.getEmail();
 	}
 
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return UserDetails.super.isAccountNonExpired();
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return user.getAccountNonLocked();
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return UserDetails.super.isCredentialsNonExpired();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return user.getIsEnabled();
+	}
+
 }

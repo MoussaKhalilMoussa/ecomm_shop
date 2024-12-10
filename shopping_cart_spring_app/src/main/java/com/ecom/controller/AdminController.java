@@ -27,7 +27,7 @@ import com.ecom.model.Product;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
-import com.ecom.service.userDtlsService;
+import com.ecom.service.UserDtlsService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -42,7 +42,7 @@ public class AdminController {
 	private ProductService productService;
 
 	@Autowired
-	userDtlsService userDtlsService;
+	UserDtlsService userDtlsService;
 
 	@ModelAttribute
 	public void getUserDetails(Principal principal, Model model) {
@@ -92,7 +92,7 @@ public class AdminController {
 			Category saveCategory = categoryService.saveCategory(category);
 
 			if (ObjectUtils.isEmpty(saveCategory)) {
-				session.setAttribute("errorMsg", "Not save! intenal server error.");
+				session.setAttribute("errorMsg", "Not saved! intenal server error.");
 			} else {
 				File saveFile = new ClassPathResource("static/img").getFile();
 
@@ -235,6 +235,28 @@ public class AdminController {
 
 		}
 		return "redirect:/admin/editProduct/" + product.getId();
+
+	}
+
+	@GetMapping("/users")
+	public String getAllUsers(Model model) {
+		List<UserDtls> users = userDtlsService.getUsers("ROLE_USER");
+		model.addAttribute("users", users);
+		return "/admin/users";
+	}
+
+	@GetMapping("/updateSts")
+	public String updateUserAccountStatus(@RequestParam("status") Boolean status, @RequestParam("id") Integer id,
+			HttpSession session) {
+
+		Boolean f = userDtlsService.updateAccountStatus(id, status);
+
+		if (f) {
+			session.setAttribute("succMsg", "Account Status Updated ");
+		} else {
+			session.setAttribute("errorMsg", "Something worng on server");
+		}
+		return "redirect:/admin/users";
 
 	}
 
