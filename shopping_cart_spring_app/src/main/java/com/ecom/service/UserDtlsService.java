@@ -3,6 +3,7 @@ package com.ecom.service;
 import java.util.List;
 
 import com.ecom.model.UserDtls;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserDtlsService {
 
@@ -27,5 +28,8 @@ public interface UserDtlsService {
 	public UserDtls getUserByToken(String token);
 
 	public UserDtls updateUser(UserDtls user);
+
+	public UserDtls updateUserProfile (UserDtls user, MultipartFile image);
+
 
 }

@@ -9,6 +9,10 @@ import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
 
+import com.ecom.model.ProductOrder;
+import com.ecom.service.*;
+import com.ecom.util.CommonUtil;
+import com.ecom.util.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
@@ -25,10 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ecom.model.Category;
 import com.ecom.model.Product;
 import com.ecom.model.UserDtls;
-import com.ecom.service.CartService;
-import com.ecom.service.CategoryService;
-import com.ecom.service.ProductService;
-import com.ecom.service.UserDtlsService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -38,15 +38,17 @@ public class AdminController {
 
 	@Autowired
 	private CategoryService categoryService;
-
 	@Autowired
 	private ProductService productService;
-
 	@Autowired
 	UserDtlsService userDtlsService;
-
 	@Autowired
 	private CartService cartService;
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	CommonUtil commonUtil;
+
 
 	@ModelAttribute
 	public void getUserDetails(Principal principal, Model model) {
@@ -102,7 +104,7 @@ public class AdminController {
 			} else {
 				File saveFile = new ClassPathResource("static/img").getFile();
 
-				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
+				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img/" + File.separator
 						+ file.getOriginalFilename());
 				System.out.println(path);
 
@@ -238,12 +240,10 @@ public class AdminController {
 			} else {
 				session.setAttribute("errorMsg", "Something wrong on server!");
 			}
-
 		}
 		return "redirect:/admin/editProduct/" + product.getId();
 
 	}
-
 	@GetMapping("/users")
 	public String getAllUsers(Model model) {
 		List<UserDtls> users = userDtlsService.getUsers("ROLE_USER");
@@ -254,7 +254,6 @@ public class AdminController {
 	@GetMapping("/updateSts")
 	public String updateUserAccountStatus(@RequestParam("status") Boolean status, @RequestParam("id") Integer id,
 			HttpSession session) {
-
 		Boolean f = userDtlsService.updateAccountStatus(id, status);
 
 		if (f) {
@@ -263,7 +262,38 @@ public class AdminController {
 			session.setAttribute("errorMsg", "Something worng on server");
 		}
 		return "redirect:/admin/users";
-
 	}
+
+	@GetMapping("/orders")
+	public String getAllOrders(Model model){
+		List<ProductOrder> orders = orderService.getAllOrders();
+		model.addAttribute("orders", orders);
+		return"/admin/orders";
+	}
+
+	@PostMapping("/update_order_status")
+	public String updateOrderStatus(@RequestParam Integer id,@RequestParam Integer st , HttpSession session) {
+		OrderStatus[] values = OrderStatus.values();
+		String status = null;
+		for (OrderStatus orderSt : values) {
+			if (orderSt.getId().equals(st)) {
+				status = orderSt.getName();
+			}
+		}
+		ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
+		try {
+			commonUtil.sendMailForProductOrder(updateOrder, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (!ObjectUtils.isEmpty(updateOrder)) {
+			session.setAttribute("succMsg", "Order status updated.");
+		} else {
+			session.setAttribute("errorMsg", "Order status not updated.");
+		}
+		return "redirect:/admin/orders";
+	}
+
 
 }

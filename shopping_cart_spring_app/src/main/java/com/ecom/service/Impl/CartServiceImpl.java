@@ -1,5 +1,6 @@
 package com.ecom.service.Impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,19 +47,47 @@ public class CartServiceImpl implements CartService {
 			cart.setQuantity(cart.getQuantity() + 1);
 			cart.setTotalPrice(cart.getQuantity() * cart.getProduct().getDiscountPrice());
 		}
-		Cart savedCart = cartRepository.save(cart);
-		return savedCart;
+        return cartRepository.save(cart);
 	}
 
 	@Override
 	public List<Cart> getCartsByUser(Integer userId) {
-		return null;
+		List<Cart> carts = cartRepository.findByUserId(userId);
+		double totalOrderPrice = 0.0;
+		List<Cart> updateCart = new ArrayList<Cart>();
+		for (Cart cart : carts) {
+			double totalPrice = (cart.getProduct().getDiscountPrice() * cart.getQuantity());
+			cart.setTotalPrice(totalPrice);
+			totalOrderPrice += totalPrice;
+			cart.setTotalOrderPrice(totalOrderPrice);
+			updateCart.add(cart);
+		}
+		return updateCart;
 	}
 
 	@Override
 	public Integer getCountCart(Integer userId) {
-		Integer countByUserId = cartRepository.countByUserId(userId);
-		return countByUserId;
+        return cartRepository.countByUserId(userId);
+	}
+
+	@Override
+	public void updateQuantity(String sy, Integer cid) {
+		Cart cart = cartRepository.findById(cid).get();
+		int updateQuantity;
+		if(sy.equalsIgnoreCase("de")){
+			updateQuantity = cart.getQuantity() - 1;
+			if(updateQuantity <= 0){
+				cartRepository.deleteById(cid);
+			} else {
+				cart.setQuantity(updateQuantity);
+				cartRepository.save(cart);
+			}
+		} else {
+			updateQuantity = cart.getQuantity() + 1;
+			cart.setQuantity(updateQuantity);
+			cartRepository.save(cart);
+		}
+
 	}
 
 }

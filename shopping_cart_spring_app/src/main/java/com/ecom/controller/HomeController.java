@@ -11,6 +11,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
+import com.ecom.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -49,6 +50,9 @@ public class HomeController {
 	private UserDtlsService userDtlsService;
 
 	@Autowired
+	private CartService cartService;
+
+	@Autowired
 	private CommonUtil commonUtil;
 
 	@Autowired
@@ -61,6 +65,8 @@ public class HomeController {
 			String email = principal.getName();
 			UserDtls userDtls = userDtlsService.getUserByEmail(email);
 			model.addAttribute("user", userDtls);
+			Integer countCart = cartService.getCountCart(userDtls.getId());
+			model.addAttribute("countCart", countCart);
 		}
 
 		List<Category> categories = categoryService.getAllActiveCategory();

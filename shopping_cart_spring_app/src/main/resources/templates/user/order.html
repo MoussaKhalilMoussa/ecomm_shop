@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base::Layout(~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Page</title>
+</head>
+<body>
+
+<section>
+    <div class="container mt-5 p-5">
+        <form action="/user/save_order" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row mb-3">
+                        <p class="text-center fs-4">Billing Address</p>
+                        <hr>
+                        <div class="col p-1">
+                            <label for="firstName">First Name </label>
+                            <input class="form-control mt-1" id="firstName" name="firstName" required type="text">
+                        </div>
+                        <div class="col p-1">
+                            <label for="lastName">Last Name </label>
+                            <input class="form-control mt-1" id="lastName" name="lastName" required type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col p-1">
+                            <label for="email">Email</label>
+                            <input class="form-control col " id="email" name="email" required type="text">
+                        </div>
+                        <div class="col p-1">
+                            <label for="mobileNumber"> Mobile Number </label>
+                            <input class="form-control col ms-2" id="mobileNumber" name="mobileNumber" required
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col p-1">
+                            <label for="address">Address</label>
+                            <input class="form-control col " id="address" name="address" required type="text">
+                        </div>
+                        <div class="col p-1">
+                            <label for="city"> City </label>
+                            <input class="form-control col ms-2" id="city" name="city" required type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col p-1">
+                            <label for="state">State</label>
+                            <input class="form-control col " id="state" name="state" required type="text">
+                        </div>
+
+                        <div class="col p-1">
+                            <label for="pinCode"> PinCode </label>
+                            <input class="form-control col ms-2" id="pinCode" name="pinCode" required type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <p class="text-center fs-4">Billing Address</p>
+                    <hr>
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tbody>
+                                <tr>
+                                    <td> Order Price</td>
+                                    <td>:</td>
+                                    <td th:text="${orderPrice + '&#8378;'}"></td>
+                                </tr>
+                                <tr>
+                                    <td> Delivery Price</td>
+                                    <td>:</td>
+                                    <td>50 &#8378;</td>
+                                </tr>
+                                <tr>
+                                    <td> Tax</td>
+                                    <td>:</td>
+                                    <td>50 &#8378;</td>
+                                </tr>
+
+                                <tr class="border-top">
+                                    <td> Total Price</td>
+                                    <td>:</td>
+                                    <td th:text="${totalOrderPrice + '&#8378;'}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card shadow p-3 mb-5 mt-2 bg-body-tertiary rounded">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Select Payment Type</label>
+                                <select class="form-control" name="paymentType" required>
+                                    <option>--select--</option>
+                                    <option value="COD">Cash On Delivery</option>
+                                    <option value="ONLINE">Online Payment</option>
+                                </select>
+                                <button type="submit" class="btn bg-primary text-white col-md-12">Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

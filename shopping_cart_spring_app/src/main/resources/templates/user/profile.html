@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base::Layout(~{::section})}"
+      xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<section>
+    <div class="container-fluid mt-5 p-5 bg-light">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card-body">
+                    <p class="fs-3 text-center">My Profile</p>
+                    <th:block th:if="${session.succMsg}">
+                        <p class="text-success fw-bold text-center">[[$&#123;session.succMsg&#125;]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <th:block th:if="${session.errorMsg}">
+                        <p class="text-danger fw-bold text-center">[[$&#123;session.errorMsg&#125;]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+                    <hr>
+                    <div class="text-center">
+                        <img alt="" class="border p-2" style="width: 110px; height: 110px; border-radius: 50%;"
+                             th:src="@{'../img/profile_img/'+${user.profileImage}}">
+                    </div>
+                    <div class="col-md-8 offset-md-2 mt-4">
+                        <table class="table table-borderless">
+                            <tbody>
+                            <form action="/user/update_profile" enctype="multipart/form-data" method="post">
+                                <tr>
+                                    <th scope="row">Name</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="name" th:value="${user.name}"
+                                               type="text"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Mobile Number</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="mobileNumber" th:value="${user.mobileNumber}"
+                                               type="text"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Email</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="" readonly
+                                               th:value="${user.email}" type="text"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Address</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="address" th:value="${user.address}"
+                                               type="text"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">City</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="city" th:value="${user.city}"
+                                               type="text"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">State</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="state" th:value="${user.state}"
+                                               type="text"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">PinCode</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="pinCode" th:value="${user.pinCode}"
+                                               type="text"></td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Image</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="img" type="file"
+                                               value=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Role</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="" readonly
+                                               th:value="${user.role}" type="text">
+                                        <input name="id" th:value="${user.id}" type="hidden">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Account Status</th>
+                                    <td>:</td>
+                                    <td><input class="form-control" name="" readonly
+                                               th:value="${user.isEnabled}" type="text"></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm bg-primary text-light">Update</button>
+                                    </td>
+                                </tr>
+                            </form>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="col-md-10 offset-md-1 mt-1">
+                <div class="row">
+                    <p class="text-center fs-3">Change Password</p>
+                    <div class="col-md-6 offset-md-3">
+                        <table class="table table-borderless">
+                            <tbody>
+                            <form action="/user/change_password" method="post">
+                                <tr>
+                                    <th scope="row">Current Password</th>
+                                    <td><input class="form-control" name="currentPassword"
+                                               type="text" value=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">New Password</th>
+                                    <td><input class="form-control" name="newPassword"
+                                               type="text" value=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Confirm Password</th>
+                                    <td><input class="form-control" name="confirmPassword"
+                                               type="text" value=""></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm bg-primary text-light col-md-4">Update</button>
+                                    </td>
+                                </tr>
+                            </form>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+</body>
+</html>

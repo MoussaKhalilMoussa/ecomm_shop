@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 			if (!file.isEmpty()) {
 				try {
 					File savedFile = new ClassPathResource("static/img").getFile();
-					Path path = Paths.get(savedFile.getAbsolutePath(), File.separator + "product_img" + File.separator,
+					Path path = Paths.get(savedFile.getAbsolutePath(), File.separator + "product_img/" + File.separator,
 							file.getOriginalFilename());
 					System.out.println(path);
 					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);

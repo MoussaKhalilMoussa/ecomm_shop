@@ -6,11 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import com.ecom.model.Cart;
 
+import java.util.List;
+
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
 
 	public Cart findByProductIdAndUserId(Integer productId, Integer userId);
 
-	public Integer countByUserId(@Param("userId") Integer userId);
+	public Integer countByUserId(Integer userId);
 
+	public List<Cart> findByUserId(Integer userId);
 }
